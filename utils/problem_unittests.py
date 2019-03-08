@@ -134,6 +134,21 @@ def test_tokenize(token_lookup):
     
     _print_success_message()
 
+def test_batch_data(batch_data, lst, seq_len, batch_size, expected_nb_batches, expected_nb_examples):
+    nb_batches = 0
+    nb_examples = 0
+    dl = batch_data(lst, seq_len, batch_size)
+    for x, y in dl:
+        print(x.shape)
+        nb_batches += 1
+        nb_examples += x.size(0)
+        assert x.size() == (batch_size, seq_len), " x.size(): {} found, expected {}".format(list(x.size()), [batch_size, seq_len])
+        assert y.size() == (batch_size,), "y.size(): {} found, expected {}".format(y.size(), (batch_size,))
+
+    assert expected_nb_batches == nb_batches, "nb_batches: {}, expected {}".format(nb_batches, expected_nb_batches)
+    assert expected_nb_examples == nb_examples, "nb_examples: {}, expected {}".format(nb_examples, expected_nb_examples)
+    print("Done!")
+
 
 def test_rnn(RNN, train_on_gpu):
     batch_size = 50
